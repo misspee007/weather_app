@@ -1,4 +1,5 @@
 const axios = require("axios");
+const xml2js = require("xml2js");
 const CONFIG = require("../config");
 
 exports.getWeatherData = async (req, res, next) => {
@@ -16,8 +17,11 @@ exports.getWeatherData = async (req, res, next) => {
     // get weather data from openweather api
     const { data: weatherData } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${CONFIG.API_KEY}`);
 
-    res.send(weatherData);
-    console.log(weatherData);
+    // convert weatherData to xml format
+    const builder = new xml2js.Builder();
+    const xmlResponse = builder.buildObject(weatherData);
+
+    return res.status(200).type("application/xml").send(xmlResponse);
   } catch (error) {
     next(error);
   }
