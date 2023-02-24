@@ -21,7 +21,7 @@ exports.getWeatherData = async (req, res, next) => {
     const builder = new xml2js.Builder();
     const xmlResponse = builder.buildObject(weatherData);
 
-    return res.status(200).type("application/xml").send(xmlResponse);
+    return res.status(200).set("Content-Type", "application/xml").send(xmlResponse);
   } catch (error) {
     next(error);
   }
