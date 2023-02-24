@@ -23,8 +23,8 @@ app.use("*", (req, res) => {
 
 // Error Handler
 app.use(function (err, req, res, next) {
-  console.error(err.stack);
-  res.status(err.status || 500).json({ message: err.message });
+  console.log(err);
+  res.status(err.status || 500).json({ error: err.message });
 });
 
 module.exports = app;

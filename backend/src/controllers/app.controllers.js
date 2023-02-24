@@ -11,18 +11,31 @@ exports.getWeatherData = async (req, res, next) => {
       `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${CONFIG.API_KEY}`
     );
 
+    // check if city exists
+    if (cityInfo.length === 0) {
+      return next({
+        status: 404,
+        message: `City ${city} not found`
+      });
+    }
+
     const lat = cityInfo[0].lat;
     const lon = cityInfo[0].lon;
 
     // get weather data from openweather api
-    const { data: weatherData } = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${CONFIG.API_KEY}`);
+    const { data: weatherData } = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${CONFIG.API_KEY}`
+    );
 
     // convert weatherData to xml format
     const builder = new xml2js.Builder();
     const xmlResponse = builder.buildObject(weatherData);
 
-    return res.status(200).set("Content-Type", "application/xml").send(xmlResponse);
+    return res
+      .status(200)
+      .set("Content-Type", "application/xml")
+      .send(xmlResponse);
   } catch (error) {
-    next(error);
+    return next(error);
   }
 };
