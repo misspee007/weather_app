@@ -18,10 +18,10 @@ app.get("/", (req, res) => {
 
 // 404 route
 app.use("*", (req, res) => {
-  return res.status(404).json({ message: "Route not found" });
+  return res.status(404).json({ error: "Route not found" });
 });
 
-// Error Handler
+// Error handler
 app.use(function (err, req, res, next) {
   console.log(err);
   res.status(err.status || 500).json({ error: err.message });

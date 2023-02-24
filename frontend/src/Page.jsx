@@ -32,7 +32,9 @@ const Page = () => {
         const xmlDoc = parser.parseFromString(res.data, "text/xml");
 
         // get weather.description
-        const weather = xmlDoc.getElementsByTagName("weather")[0].getElementsByTagName("description")[0].childNodes[0].nodeValue;
+        const weather = xmlDoc
+          .getElementsByTagName("weather")[0]
+          .getElementsByTagName("description")[0].childNodes[0].nodeValue;
 
         // get name
         const name = xmlDoc.getElementsByTagName("name")[0].innerHTML;
@@ -48,16 +50,17 @@ const Page = () => {
   return (
     <main>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="city">Name of City</label>
-        <input
-          type="text"
-          name="city"
-          value={input}
-          onChange={handleInputChange}
-          required
-        />
+        <label>
+          Name of City
+          <input
+            type="text"
+            name="city"
+            value={input}
+            onChange={handleInputChange}
+            required
+          />
+        </label>
 
-        <label htmlFor="submit">Find</label>
         <button type="submit" id="submit">
           Find
         </button>
@@ -65,7 +68,7 @@ const Page = () => {
       {weather && (
         <section>
           <h2>Weather in {city} Today</h2>
-          <p>{weather}</p>
+          <p className="weather-desc">{weather}</p>
         </section>
       )}
     </main>
