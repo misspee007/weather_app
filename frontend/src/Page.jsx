@@ -48,10 +48,10 @@ const Page = () => {
   }
 
   return (
-    <main>
+    <>
       <form onSubmit={handleSubmit}>
         <label>
-          Name of City
+          Name of City:
           <input
             type="text"
             name="city"
@@ -66,12 +66,12 @@ const Page = () => {
         </button>
       </form>
       {weather && (
-        <section>
-          <h2>Weather in {city} Today</h2>
-          <p className="weather-desc">{weather}</p>
+        <section className="weather-desc">
+          <h2>Weather at {city} Today: </h2>
+          <p>{weather}</p>
         </section>
       )}
-    </main>
+    </>
   );
 };
 

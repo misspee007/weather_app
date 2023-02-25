@@ -5,11 +5,16 @@ import Page from "./page";
 const App = () => {
   return (
     <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Page />} />
-        </Routes>
-      </BrowserRouter>
+      <header>
+        <h1>Weather Finder</h1>
+      </header>
+      <main>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Page />} />
+          </Routes>
+        </BrowserRouter>
+      </main>
     </div>
   );
 };
