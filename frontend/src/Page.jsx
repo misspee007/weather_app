@@ -57,6 +57,7 @@ const Page = () => {
             name="city"
             value={input}
             onChange={handleInputChange}
+            autoComplete="off"
             required
           />
         </label>

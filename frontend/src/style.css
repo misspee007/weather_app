@@ -4,9 +4,10 @@
   box-sizing: border-box;
 }
 
-body{
+body {
   background-color: #f4f2f2;
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   color: rgb(0, 0, 17);
   font-size: 1rem;
 }
@@ -17,14 +18,19 @@ body{
   height: 100vh;
 }
 
-header{
-  padding: 1rem 0;
+header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
   width: 100%;
-  text-align: center;
+  text-align: left;
   border-bottom: 2px solid #e1e1e1;
 }
+h1 {
+  font-size: 1.5rem;
+}
 
-main{
+main {
   display: grid;
   grid-template-rows: 1fr 2fr;
   padding: 3rem;
@@ -33,43 +39,93 @@ main{
   width: 100%;
 }
 
-form{
+form {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-label{
+label {
   display: flex;
   flex-direction: column;
   margin-bottom: 1rem;
   font-weight: 600;
 }
 
-input{
+input {
   padding: 1rem;
   border: none;
   border-radius: 8px;
   margin-top: 1rem;
 }
-input:focus{
+input:focus {
   outline: none;
 }
 
 button {
-  padding: .5rem;
+  cursor: pointer;
+  padding: 0.5rem;
   border-radius: 8px;
   border: none;
   background-color: rgb(115, 174, 252);
   font-weight: 600;
   font-size: 1rem;
-  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+button:hover {
+  background-color: rgba(115, 174, 252, 0.829);
+  /* color: #fff; */
 }
 
-main .weather-desc{
+main .weather-desc {
   width: 100%;
 }
-.weather-desc h2{
+.weather-desc h2 {
   font-size: 1rem;
 }
 
+/* only very small screens */
+@media (max-width: 374px) {
+  main {
+    padding: 3rem 1rem;
+  }
+  header {
+    padding: 1rem;
+  }
+}
+
+/* tablet and larger screens */
+@media (min-width: 768px) {
+  main {
+    max-width: 40rem;
+    justify-self: center;
+  }
+
+  form {
+    /* width: 50%; */
+    justify-content: center;
+  }
+
+  label {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  input,
+  button {
+    width: 70%;
+  }
+
+  button {
+    align-self: flex-end;
+  }
+}
+
+/* desktop and larger screens */
+@media (min-width: 1024px) {
+  main {
+    grid-template-rows: 1fr 1fr;
+  }
+}
