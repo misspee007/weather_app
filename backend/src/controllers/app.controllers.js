@@ -15,7 +15,7 @@ exports.getWeatherData = async (req, res, next) => {
     if (cityInfo.length === 0) {
       return next({
         status: 404,
-        message: `City ${city} not found`
+        message: `City ${city} not found`,
       });
     }
 
