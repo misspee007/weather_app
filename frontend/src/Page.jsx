@@ -8,6 +8,7 @@ const Page = () => {
   const [city, setCity] = useState("");
   const [input, setInput] = useState("");
   const [weather, setWeather] = useState(null);
+  const [error, setError] = useState(null);
 
   function handleInputChange(e) {
     setInput(e.target.value);
@@ -16,6 +17,8 @@ const Page = () => {
   function handleSubmit(e) {
     e.preventDefault();
     setInput("");
+    setWeather(null);
+    setError(null);
     getData();
   }
 
@@ -41,7 +44,7 @@ const Page = () => {
         setCity(name);
       })
       .catch((err) => {
-        console.log(err);
+        setError(err.message);
       });
   }
 
@@ -68,6 +71,11 @@ const Page = () => {
         <section className="weather-desc">
           <h2>Weather at {city} Today: </h2>
           <p>{weather}</p>
+        </section>
+      )}
+      {error && (
+        <section className="error">
+          <p>An error occured: {error}. Try again.</p>
         </section>
       )}
     </>

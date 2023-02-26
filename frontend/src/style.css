@@ -85,6 +85,12 @@ main .weather-desc {
   font-size: 1rem;
 }
 
+.error{
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
 /* only very small screens */
 @media (max-width: 374px) {
   main {
