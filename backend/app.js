@@ -10,19 +10,19 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to the Weather App" });
-});
-
-app.use("/city", Router);
-
 // serve static files from dist folder
 const rootDir = path.resolve("../");
 app.use(express.static(path.join(rootDir, "frontend", "src", "dist")));
 
-app.get("/page", (req, res) => {
+app.get("/", (req, res) => {
   res.sendFile(path.join(rootDir, "frontend", "src", "dist", "index.html"));
 });
+
+app.get("/api", (req, res) => {
+  res.json({ message: "Welcome to the API" });
+});
+
+app.use("/api", Router);
 
 // 404 route
 app.use("*", (req, res) => {

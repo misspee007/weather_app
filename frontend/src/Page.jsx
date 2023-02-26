@@ -2,7 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import CONFIG from "./config";
 
-const baseUrl = import.meta.env.DEV ? CONFIG.DEV.API : CONFIG.PROD.API;
+const baseUrl = CONFIG.API_URL;
 
 const Page = () => {
   const [city, setCity] = useState("");

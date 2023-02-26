@@ -3,6 +3,6 @@ const { getWeatherData } = require("../controllers/app.controllers");
 
 const Router = express.Router();
 
-Router.get("/:city", getWeatherData);
+Router.get("/city/:city", getWeatherData);
 
 module.exports = Router;
