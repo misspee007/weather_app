@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Page from "./page";
+import Page from "./Page";
 
 const App = () => {
   return (
