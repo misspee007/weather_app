@@ -1,19 +1,27 @@
 const express = require("express");
+const path = require("path");
 const helmet = require("helmet");
 const cors = require("cors");
-const appRouter = require("./src/routes/app.routes");
+const Router = require("./src/routes/routes");
 
 const app = express();
 
-app.use(cors());
 app.use(helmet());
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-app.use("/city", appRouter);
 
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.json({ message: "Welcome to the Weather App" });
+});
+
+app.use("/city", Router);
+
+// serve static files from dist folder
+const rootDir = path.resolve("../");
+app.use(express.static(path.join(rootDir, "frontend", "src", "dist")));
+
+app.get("/page", (req, res) => {
+  res.sendFile(path.join(rootDir, "frontend", "src", "dist", "index.html"));
 });
 
 // 404 route

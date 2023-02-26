@@ -1,10 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
+import CONFIG from "./config";
 
-const api =
-  process.env.NODE_ENV === "production"
-    ? "https://weather-app-2021.herokuapp.com"
-    : "http://localhost:4050";
+const baseUrl = import.meta.env.DEV ? CONFIG.DEV.API : CONFIG.PROD.API;
 
 const Page = () => {
   const [city, setCity] = useState("");
@@ -23,7 +21,7 @@ const Page = () => {
 
   function getData() {
     axios
-      .get(`${api}/city/${input}`, {
+      .get(`${baseUrl}/city/${input}`, {
         "Content-Type": "application/xml; charset=utf-8",
       })
       .then((res) => {
