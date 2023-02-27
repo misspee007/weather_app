@@ -1,26 +1,11 @@
 const axios = require("axios");
-const xml2js = require("xml2js");
 const CONFIG = require("../config");
+const { jsonToXml, getCoordinates } = require("../utils/utils");
 
 exports.getWeatherData = async (req, res, next) => {
   try {
-    const { city } = req.params;
-
     // get coordinates from city name
-    const { data: cityInfo } = await axios.get(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${CONFIG.API_KEY}`
-    );
-
-    // check if city exists
-    if (cityInfo.length === 0) {
-      return next({
-        status: 404,
-        message: `City ${city} not found`,
-      });
-    }
-
-    const lat = cityInfo[0].lat;
-    const lon = cityInfo[0].lon;
+    const { lat, lon } = await getCoordinates(req, res, next);
 
     // get weather data from openweather api
     const { data: weatherData } = await axios.get(
@@ -28,8 +13,9 @@ exports.getWeatherData = async (req, res, next) => {
     );
 
     // convert weatherData to xml format
-    const builder = new xml2js.Builder();
-    const xmlResponse = builder.buildObject(weatherData);
+    const xmlResponse = `<?xml version="1.0" encoding="UTF-8"?><root>${jsonToXml(
+      weatherData
+    )}</root>`;
 
     return res
       .status(200)
