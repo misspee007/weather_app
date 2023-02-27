@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import CONFIG from "./config";
 import { xmlToJson } from "./utils/utils";
@@ -8,7 +8,20 @@ const baseUrl = CONFIG.API_URL;
 const Page = () => {
   const [input, setInput] = useState("");
   const [weather, setWeather] = useState({});
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
+
+  // on load, get weather for location
+  useEffect(() => {
+    // get name of location
+    onFirstLoad();
+  }, []);
+
+  async function onFirstLoad() {
+    // get name of location
+    const res = await axios.get("https://ipapi.co/json/");
+    console.log("res: ", res.data);
+    getData(res.data.country_capital);
+  }
 
   function handleInputChange(e) {
     setInput(e.target.value);
@@ -16,14 +29,13 @@ const Page = () => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    setInput("");
-    setError(null);
-    getData();
+    setError(false);
+    getData(input);
   }
 
-  function getData() {
+  function getData(city) {
     axios
-      .get(`${baseUrl}/city/${input}`, {
+      .get(`${baseUrl}/city/${city}`, {
         "Content-Type": "application/xml; charset=utf-8",
       })
       .then((res) => {
@@ -64,27 +76,29 @@ const Page = () => {
             },
           ],
         });
+
+        setInput("");
       })
       .catch((err) => {
         console.log("err: ", err);
-        setError(err.message);
+        setError(true);
       });
   }
 
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <label>
-          Name of City:
-          <input
-            type="text"
-            name="city"
-            value={input}
-            onChange={handleInputChange}
-            autoComplete="off"
-            required
-          />
-        </label>
+        <label htmlFor="city">Name of City</label>
+        <input
+          id="city"
+          type="text"
+          name="city"
+          placeholder="City"
+          value={input}
+          onChange={handleInputChange}
+          autoComplete="off"
+          required
+        />
 
         <button type="submit" id="submit">
           Find
@@ -92,36 +106,36 @@ const Page = () => {
       </form>
       {weather.id && (
         <section className="weather-desc">
-          <div className="card-top">
-            <h2>
+          <div className="card card-top">
+            <h2 className="h-top">
               {weather.city}, {weather.country}
             </h2>
 
-            <div>
+            <div className="btm-wrap">
               <div>
-                <p>{weather.temp} °C</p>
-                <p>{weather.description}</p>
+                <p className="temp">{weather.temp} °C</p>
+                <img
+                  src={`http://openweathermap.org/img/w/${weather.icon}.png`}
+                />
               </div>
-              <img
-                src={`http://openweathermap.org/img/w/${weather.icon}.png`}
-              />
+              <p>{weather.description}</p>
             </div>
           </div>
 
-          <div>
-            <div className="card-top">
+          <div className="card">
+            <div className="card-btm">
               <h2>
                 Weather Today in {weather.city}, {weather.country}
               </h2>
 
-              <div>
-                <div>
-                  <p>{weather.feels_like} °C</p>
-                  <p>Feels Like</p>
+              <div className="btm-wrap">
+                <div className="">
+                  <p className="temp">{weather.feels_like} °C</p>
+                  <img
+                    src={`http://openweathermap.org/img/w/${weather.icon}.png`}
+                  />
                 </div>
-                <img
-                  src={`http://openweathermap.org/img/w/${weather.icon}.png`}
-                />
+                <p>Feels Like</p>
               </div>
             </div>
 
@@ -130,8 +144,8 @@ const Page = () => {
                 weather.details.map((detail, index) => {
                   return (
                     <li key={index}>
-                      <span>{detail.name}</span>
-                      <span>{detail.value}</span>
+                      <p className="titlestyle:">{detail.name}</p>
+                      <p>{detail.value}</p>
                     </li>
                   );
                 })}
@@ -141,7 +155,7 @@ const Page = () => {
       )}
       {error && (
         <section className="error">
-          <p>An error occured: {error}. Try again.</p>
+          <p>An error occured. Please refresh the page and try again.</p>
         </section>
       )}
     </>
