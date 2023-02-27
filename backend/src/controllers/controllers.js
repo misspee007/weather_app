@@ -9,7 +9,7 @@ exports.getWeatherData = async (req, res, next) => {
 
     // get weather data from openweather api
     const { data: weatherData } = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${CONFIG.API_KEY}`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${CONFIG.API_KEY}`
     );
 
     // convert weatherData to xml format

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
 import CONFIG from "./config";
+import { xmlToJson } from "./utils/utils";
 
 const baseUrl = CONFIG.API_URL;
 
 const Page = () => {
-  const [city, setCity] = useState("");
   const [input, setInput] = useState("");
-  const [weather, setWeather] = useState(null);
+  const [weather, setWeather] = useState({});
   const [error, setError] = useState(null);
 
   function handleInputChange(e) {
@@ -17,7 +17,6 @@ const Page = () => {
   function handleSubmit(e) {
     e.preventDefault();
     setInput("");
-    setWeather(null);
     setError(null);
     getData();
   }
@@ -32,18 +31,42 @@ const Page = () => {
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(res.data, "text/xml");
 
-        // get weather.description
-        const weather = xmlDoc
-          .getElementsByTagName("weather")[0]
-          .getElementsByTagName("description")[0].childNodes[0].nodeValue;
+        const json = xmlToJson(xmlDoc);
 
-        // get name
-        const name = xmlDoc.getElementsByTagName("name")[0].innerHTML;
-
-        setWeather(weather);
-        setCity(name);
+        setWeather({
+          id: json.root.id,
+          city: json.root.name,
+          country: json.root.sys.country,
+          description: json.root.weather.description,
+          temp: json.root.main.temp,
+          icon: json.root.weather.icon,
+          feels_like: json.root.main.feels_like,
+          details: [
+            {
+              name: "High/Low",
+              value: `${json.root.main.temp_max} °C/${json.root.main.temp_min} °C`,
+            },
+            {
+              name: "Pressure",
+              value: `${json.root.main.pressure} hPa`,
+            },
+            {
+              name: "Humidity",
+              value: `${json.root.main.humidity} %`,
+            },
+            {
+              name: "Sea Level",
+              value: `${json.root.main.sea_level} hPa`,
+            },
+            {
+              name: "Ground Level",
+              value: `${json.root.main.grnd_level} hPa`,
+            },
+          ],
+        });
       })
       .catch((err) => {
+        console.log("err: ", err);
         setError(err.message);
       });
   }
@@ -67,10 +90,53 @@ const Page = () => {
           Find
         </button>
       </form>
-      {weather && (
+      {weather.id && (
         <section className="weather-desc">
-          <h2>Weather at {city} Today: </h2>
-          <p>{weather}</p>
+          <div className="card-top">
+            <h2>
+              {weather.city}, {weather.country}
+            </h2>
+
+            <div>
+              <div>
+                <p>{weather.temp} °C</p>
+                <p>{weather.description}</p>
+              </div>
+              <img
+                src={`http://openweathermap.org/img/w/${weather.icon}.png`}
+              />
+            </div>
+          </div>
+
+          <div>
+            <div className="card-top">
+              <h2>
+                Weather Today in {weather.city}, {weather.country}
+              </h2>
+
+              <div>
+                <div>
+                  <p>{weather.feels_like} °C</p>
+                  <p>Feels Like</p>
+                </div>
+                <img
+                  src={`http://openweathermap.org/img/w/${weather.icon}.png`}
+                />
+              </div>
+            </div>
+
+            <ul>
+              {weather.details &&
+                weather.details.map((detail, index) => {
+                  return (
+                    <li key={index}>
+                      <span>{detail.name}</span>
+                      <span>{detail.value}</span>
+                    </li>
+                  );
+                })}
+            </ul>
+          </div>
         </section>
       )}
       {error && (
