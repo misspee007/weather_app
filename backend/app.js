@@ -6,8 +6,25 @@ const Router = require("./src/routes/routes");
 
 const app = express();
 
-app.use(helmet());
 app.use(cors());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "img-src": ["'self'", "data:", "https://openweathermap.org/"],
+        "default-src": [
+          "'self'",
+          "data:",
+          "https://openweathermap.org/",
+          "https://ipapi.co",
+        ],
+      },
+    },
+  })
+);
 app.use(express.json());
 
 // serve static files from dist folder
