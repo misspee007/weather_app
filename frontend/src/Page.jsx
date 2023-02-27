@@ -8,6 +8,7 @@ const baseUrl = CONFIG.API_URL;
 const Page = () => {
   const [input, setInput] = useState("");
   const [weather, setWeather] = useState({});
+  const [weatherDetails, setWeatherDetails] = useState({});
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,6 +45,14 @@ const Page = () => {
         const xmlDoc = parser.parseFromString(res.data, "text/xml");
 
         const json = xmlToJson(xmlDoc);
+        const details = {
+          "High/Low": [json.root.main.temp_max, json.root.main.temp_min],
+          Pressure: json.root.main.pressure,
+          Humidity: json.root.main.humidity,
+          "Sea Level": json.root.main.sea_level,
+          "Ground Level": json.root.main.grnd_level,
+        };
+        setWeatherDetails(details);
 
         setWeather({
           id: json.root.id,
@@ -56,23 +65,23 @@ const Page = () => {
           details: [
             {
               name: "High/Low",
-              value: `${json.root.main.temp_max} °C/${json.root.main.temp_min} °C`,
+              value: `${details["High/Low"][0]} °C/${details["High/Low"][1]} °C`,
             },
             {
               name: "Pressure",
-              value: `${json.root.main.pressure} hPa`,
+              value: `${details["Pressure"]} hPa`,
             },
             {
               name: "Humidity",
-              value: `${json.root.main.humidity} %`,
+              value: `${details["Humidity"]} %`,
             },
             {
               name: "Sea Level",
-              value: `${json.root.main.sea_level} hPa`,
+              value: `${details["Sea Level"]} hPa`,
             },
             {
               name: "Ground Level",
-              value: `${json.root.main.grnd_level} hPa`,
+              value: `${details["Ground Level"]} hPa`,
             },
           ],
         });
@@ -105,7 +114,12 @@ const Page = () => {
           Find
         </button>
       </form>
-      {isLoading ? (
+      {error && (
+        <section className="error">
+          <p>An error occured. Please refresh the page and try again.</p>
+        </section>
+      )}
+      {isLoading && !error ? (
         <div className="loading-pane">
           <h2 className="loader">🌀</h2>
         </div>
@@ -150,6 +164,22 @@ const Page = () => {
               <ul>
                 {weather.details &&
                   weather.details.map((detail, index) => {
+                    // check if weatherDetails has value
+                    if (
+                      typeof weatherDetails[detail.name] === "undefined" ||
+                      (Array.isArray(weatherDetails[detail.name]) &&
+                        (typeof weatherDetails[detail.name][0] ===
+                          "undefined" ||
+                          typeof weatherDetails[detail.name][1] ===
+                            "undefined"))
+                    ) {
+                      // check if value is an array
+                      console.log(
+                        "weatherDetails[detail.name]: ",
+                        weatherDetails[detail.name]
+                      );
+                      return;
+                    }
                     return (
                       <li key={index}>
                         <p className="title">{detail.name}</p>
@@ -161,11 +191,6 @@ const Page = () => {
             </div>
           </section>
         )
-      )}
-      {error && (
-        <section className="error">
-          <p>An error occured. Please refresh the page and try again.</p>
-        </section>
       )}
     </>
   );
