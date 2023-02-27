@@ -11,7 +11,6 @@ const Page = () => {
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // on load, get weather for location
   useEffect(() => {
     // get name of location
     onFirstLoad();
@@ -20,7 +19,6 @@ const Page = () => {
   async function onFirstLoad() {
     // get name of location
     const res = await axios.get("https://ipapi.co/json/");
-    console.log("res: ", res.data);
     getData(res.data.country_capital);
   }
 
@@ -31,11 +29,11 @@ const Page = () => {
   function handleSubmit(e) {
     e.preventDefault();
     setError(false);
+    setIsLoading(true);
     getData(input);
   }
 
   function getData(city) {
-    setIsLoading(true);
     axios
       .get(`${baseUrl}/city/${city}`, {
         "Content-Type": "application/xml; charset=utf-8",
@@ -123,6 +121,7 @@ const Page = () => {
                 <div>
                   <p className="temp">{weather.temp} °C</p>
                   <img
+                    alt="weather icon"
                     src={`http://openweathermap.org/img/w/${weather.icon}.png`}
                   />
                 </div>
@@ -140,6 +139,7 @@ const Page = () => {
                   <div className="">
                     <p className="temp">{weather.feels_like} °C</p>
                     <img
+                      alt="weather icon"
                       src={`http://openweathermap.org/img/w/${weather.icon}.png`}
                     />
                   </div>
@@ -152,7 +152,7 @@ const Page = () => {
                   weather.details.map((detail, index) => {
                     return (
                       <li key={index}>
-                        <p className="titlestyle:">{detail.name}</p>
+                        <p className="title">{detail.name}</p>
                         <p>{detail.value}</p>
                       </li>
                     );

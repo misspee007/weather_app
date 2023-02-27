@@ -68,7 +68,6 @@ main {
   display: flex;
   flex-direction: column;
   padding: 1rem;
-  justify-content: center;
   width: 100%;
   flex: 1;
 }
@@ -209,11 +208,10 @@ main .weather-desc {
   }
 
   form {
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 20em;
+    grid-template-columns: 20em 10em;
     row-gap: 1rem;
     justify-content: center;
-    margin: 1.5rem 0 3.5rem 0;
+    margin: 3.5rem 0;
   }
 
   .weather-desc {
